@@ -1,0 +1,11 @@
+fieldset {
+    position: relative;
+}
+.user-info {
+    padding: 5px;
+    border: 1px solid black;
+    position: absolute;
+    right: 20px;
+    font-size: 18px;
+    margin-bottom: 20px;
+}

@@ -1,0 +1,43 @@
+<html>
+    <head>
+        <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico"/>
+        <link rel="stylesheet" type="text/css" href="site.css"/>
+        <script src="site.js"></script>
+        <title>Website</title>
+    </head>
+    <body>
+
+    <fieldset>
+        <legend>XSS</legend>
+        <div class="user-info"></div>
+
+        <form id="xss-form" onsubmit="sendXSS(this); return false;">
+            <label>Login:<input name="login" type="text"/></label><br/>
+            <label>Password:<input name="password" type="text"/></label><br/>
+            <input type="submit" value="Sing in (Send XSS data)">
+        </form>
+
+        <form id="xss-blocked-form" onsubmit="sendBlockedXSS(this); return false;">
+            <label>Login:<input name="login" type="text"/></label><br/>
+            <label>Password:<input name="password" type="text"/></label><br/>
+            <input type="submit" value="Sing in (Send blocked XSS data)">
+        </form>
+
+        <div>
+            List of XSS vectors before HTML5
+            <pre><code>&lt;a href=javascript:alert(1)&gt;click&lt;a/&gt;
+inputtext" onmouseover="alert(1)</code></pre>
+            List of XSS vectors for HTML5
+            <pre><code>&lt;video&gt;&lt;source onerror="javascript:alert(1)"&gt;
+&lt;audio&gt;&lt;source onerror="javascript:alert(1)"&gt; // canvas, menu, section ...
+inputtext" autofocus onfocus="alert(1)  // input, select, keygen ...
+// onmousewheel, onscroll ..</code></pre>
+        </div>
+    </fieldset>
+
+    <div>
+        <a href="http://127.0.0.1:1337/">You won 1000000$</a>
+    </div>
+
+    </body>
+</html>

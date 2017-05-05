@@ -1,3 +1,3 @@
-Start nodejs server: `node server/server.js`
+Start website nodejs server: `node website/server.js`
 
-Start static-server: `npm i -g static-server && static-server -p 1337`
+Start phishing site static-server: `npm i -g static-server && cd phishing && static-server -p 1337`

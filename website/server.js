@@ -1,5 +1,6 @@
 let http = require('http');
 let url = require('url');
+let fs = require("fs");
 
 let server = new http.Server(accept);
 
@@ -11,6 +12,7 @@ const data = {
 };
 const allowDomains = ['http://google.com', 'http://127.0.0.1:1337']; // Resolved domains for requests
 
+let userData = null;
 function accept(req, res) {
 
     console.info("URL", req.url);
@@ -19,6 +21,26 @@ function accept(req, res) {
     let originDomain = req.headers.origin;
 
     switch (urlParced.pathname) {
+        case '/xssLogin':
+            userData = "";
+            req.on('data', chunk => userData += chunk); // Read req data
+            req.on('end', () => {
+                userData = JSON.parse(userData);
+                res.writeHead(200, {'Content-Type': 'text/html; charset=utf8'});
+                res.end(`Hello, ${userData.login}<br/>Your password: <input value="${userData.password}"/>`)
+            });
+            break;
+        case '/xssBlockedLogin':
+            userData = "";
+            req.on('data', chunk => userData += chunk); // Read req data
+            req.on('end', () => {
+                userData = JSON.parse(userData);
+                userData = cutXSSfromData(userData);
+                res.writeHead(200, {'Content-Type': 'text/html; charset=utf8'});
+                res.end(`Hello, ${userData.login}<br/>Your password: <input value="${userData.password}"/>`)
+            });
+            break;
+            
         case '/cors':
             res.writeHead(200, {
                 'Content-Type': 'application/json',
@@ -69,16 +91,41 @@ function accept(req, res) {
             break;
 
         default:
-            res.writeHead(200, {
-                'Content-Type': 'text/plain',
-                'Cache-Control': 'no-cache',
-                'Access-Control-Allow-Origin': 'https://www.google.ru/'
-            });
-            res.end('Server responce');
+            res.writeHead(200);
+            res.end(getStatic(req.url));
     }
 }
 
-const fromGetDataToObj = (data) => {
+let siteHtml = fs.readFileSync('./website/site.html');
+let siteJS = fs.readFileSync('./website/site.js');
+let siteCss = fs.readFileSync('./website/site.css');
+let siteIco = fs.readFileSync('./favicon.ico');
+const getStatic = (url) => {
+    return {
+        '/': siteHtml,
+        '/site.js': siteJS,
+        '/site.css': siteCss,
+        '/favicon.ico': siteIco
+    }[url] || null;
+};
+
+function cutXSSfromData(data) {
+    const escapeChars = (text) => text.replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;') // it's not neccessary to escape >
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;')
+        .replace(/\//g, '&#x2F');
+    const events = ["data:", "about:", "vbscript:", "onclick", "onload", "onunload", "onabort", "onerror", "onblur", "onchange", "onfocus", "onreset", "onsubmit", "ondblclick", "onkeydown", "onkeypress", "onkeyup", "onmousedown", "onmouseup", "onmouseover", "onmouseout", "onselect", "javascript"];
+    const escapeEvents = (text) => events.reduce((res, cur) => res.replace(new RegExp(cur + '=', 'g'), ''), text);
+
+    Object.keys(data).forEach(field => {
+        data[field] = escapeChars(data[field]);
+        data[field] = escapeEvents(data[field]);
+    });
+    return data;
+}
+
+const fromGETdataToObj = (data) => {
     let fields = data.split('&');
     let field = null;
     return fields.reduce((res, item) => {
