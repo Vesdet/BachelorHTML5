@@ -1,3 +1,5 @@
-Start website nodejs server: `node website/server.js`
+Init project: `npm install && npm i -g static-server`
 
-Start phishing site static-server: `npm i -g static-server && cd phishing && static-server -p 1337`
+Start website nodejs server: `npm run website`
+
+Start phishing site static-server: `npm run phishing`

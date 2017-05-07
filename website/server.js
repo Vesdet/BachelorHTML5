@@ -1,6 +1,7 @@
 let http = require('http');
 let url = require('url');
-let fs = require("fs");
+let fs = require('fs');
+let xssFilters = require('xss-filters');
 
 let server = new http.Server(accept);
 
@@ -91,7 +92,9 @@ function accept(req, res) {
             break;
 
         default:
-            res.writeHead(200);
+            res.writeHead(200, {
+                'Access-Control-Allow-Origin': '*'
+            });
             res.end(getStatic(req.url));
     }
 }
@@ -110,16 +113,11 @@ const getStatic = (url) => {
 };
 
 function cutXSSfromData(data) {
-    const escapeChars = (text) => text.replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;') // it's not neccessary to escape >
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;')
-        .replace(/\//g, '&#x2F');
     const events = ["data:", "about:", "vbscript:", "onclick", "onload", "onunload", "onabort", "onerror", "onblur", "onchange", "onfocus", "onreset", "onsubmit", "ondblclick", "onkeydown", "onkeypress", "onkeyup", "onmousedown", "onmouseup", "onmouseover", "onmouseout", "onselect", "javascript"];
     const escapeEvents = (text) => events.reduce((res, cur) => res.replace(new RegExp(cur + '=', 'g'), ''), text);
 
     Object.keys(data).forEach(field => {
-        data[field] = escapeChars(data[field]);
+        data[field] = xssFilters.inHTMLData(data[field]);
         data[field] = escapeEvents(data[field]);
     });
     return data;

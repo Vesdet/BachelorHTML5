@@ -1,0 +1,23 @@
+{
+  "name": "bachelor-html5",
+  "version": "1.0.0",
+  "description": "Start website nodejs server: `node website/server.js`",
+  "main": "index.js",
+  "dependencies": {
+    "xss-filters": "^1.2.7"
+  },
+  "scripts": {
+    "phishing": "static-server phishing -p 1337",
+    "website": "node website/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vesdet/BachelorHTML5.git"
+  },
+  "author": "Vesdet",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Vesdet/BachelorHTML5/issues"
+  },
+  "homepage": "https://github.com/Vesdet/BachelorHTML5#readme"
+}
