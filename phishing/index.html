@@ -12,12 +12,19 @@
         <legend>CORS</legend>
         <label>Method:
             <select id="cors-method">
+                <option value="GET">GET</option>
                 <option value="POST">POST</option>
                 <option value="DELETE">DELETE</option>
                 <option value="OPTIONS">OPTIONS</option>
             </select>
         </label>
-        <textarea rows="5" id="corsText" placeholder="Server data"></textarea><br />
+        <label>Headers:
+            <input id="cors-header-title" placeholder="Header Title"/>:
+            <input id="cors-header-value" placeholder="Header Value"/><br/>
+            Example: <code>"Content-Type": "application/xml"</code>
+        </label>
+        <textarea class="corsText" cols="100" rows="5"
+                  placeholder="Server data"></textarea><br />
         <button onclick="sendCORS()">Send CORS request</button>
     </fieldset>
 

@@ -3,22 +3,26 @@ const CSRF_URL = 'http://127.0.0.1:1327/csrf/customRequest';
 const CSRF_STEAL_COOKIE_URL = 'http://127.0.0.1:1327/csrf/getCookie';
 
 function sendCORS() {
-    let myHeaders = new Headers();
-    myHeaders.append("Content-Type", 'application/xml');
-    const body = '<?xml version="1.0"?><person><name>Nikita</name></person>';
     const method = document.getElementById('cors-method').value;
+    const headTitle = document.getElementById('cors-header-title').value;
+    const headValue = document.getElementById('cors-header-value').value;
+
+    let myHeaders = new Headers();
+    if (headTitle) myHeaders.append(headTitle, headValue);
+    const body = '<?xml version="1.0"?><person><name>Nikita</name></person>';
 
     fetch(CORS_URL, {
         method: method,
-        body: body,
+        body: method !== 'GET' ? body : false,
         headers: myHeaders
     })
         .then((res) => res.json())
         .then((data) => {
             console.log("serverData:", data);
-            document.getElementById('corsText').innerHTML = JSON.stringify(data);
+            document.getElementsByClassName('corsText')[0].innerHTML = JSON.stringify(data);
         })
-        .catch((err) => document.getElementById('corsText').innerHTML = JSON.stringify(err));
+        .catch((err) =>
+            document.getElementsByClassName('corsText')[0].innerHTML = err);
 }
 
 function stealCookie() {
