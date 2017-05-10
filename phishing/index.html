@@ -45,5 +45,18 @@
         </div>
     </fieldset>
 
+    <fieldset class="clickjacking">
+        <legend>Clickjacking</legend>
+        <button onclick="showIframe()">Show iframe</button><br/>
+
+        <iframe sandbox="allow-scripts allow-forms allow-modals"
+                class="clickjacking-frame" src="http://127.0.0.1:1327/"></iframe>
+
+        <div class="clickjacking-fake">
+            Congratulate! You benefited $1000000.<br/>
+            <button>Receive money!!</button>
+        </div>
+
+    </fieldset>
     </body>
 </html>

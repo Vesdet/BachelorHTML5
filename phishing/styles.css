@@ -5,3 +5,23 @@ label {
 .stealing-cookies {
     width: 300px;
 }
+
+.clickjacking {
+    height: 600px;
+}
+
+.clickjacking-fake {
+    margin: 14px 27px;
+}
+
+.clickjacking-frame {
+    position: absolute;
+    opacity: 0.4;
+    border: 0;
+    width: 800px;
+    height: 520px;
+}
+
+.clickjacking-frame-none {
+    opacity: 0;
+}

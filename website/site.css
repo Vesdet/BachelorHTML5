@@ -9,3 +9,21 @@ fieldset {
     font-size: 18px;
     margin-bottom: 20px;
 }
+
+#iframe-click-protector {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 99999999;
+}
+#iframe-click-protector button {
+    position: absolute;
+    right: 20px;
+    border: 2px solid black;
+    border-radius: 5px;
+    color: white;
+    font-size: 20px;
+    background-color: darkblue;
+}

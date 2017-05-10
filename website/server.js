@@ -36,7 +36,7 @@ function accept(req, res) {
             req.on('data', chunk => userData += chunk); // Read req data
             req.on('end', () => {
                 userData = JSON.parse(userData);
-                userData = cutXSSfromData(userData);
+                userData = customCleanFromXSS(userData);
                 res.writeHead(200, {'Content-Type': 'text/html; charset=utf8'});
                 res.end(`Hello, ${userData.login}<br/>Your password: <input value="${userData.password}"/>`)
             });
@@ -93,7 +93,10 @@ function accept(req, res) {
 
         default:
             res.writeHead(200, {
-                'Access-Control-Allow-Origin': '*'
+                'Access-Control-Allow-Origin': '*',
+                'X-Frame-Options': 'DENY', // Protection from Clickjacking
+                // 'X-Frame-Options': 'SAMEORIGIN',
+                // 'X-Frame-Options': 'ALLOW-FROM http://127.0.0.1:1337/'
             });
             res.end(getStatic(req.url));
     }
@@ -112,12 +115,26 @@ const getStatic = (url) => {
     }[url] || null;
 };
 
-function cutXSSfromData(data) {
-    const events = ["data:", "about:", "vbscript:", "onclick", "onload", "onunload", "onabort", "onerror", "onblur", "onchange", "onfocus", "onreset", "onsubmit", "ondblclick", "onkeydown", "onkeypress", "onkeyup", "onmousedown", "onmouseup", "onmouseover", "onmouseout", "onselect", "javascript"];
-    const escapeEvents = (text) => events.reduce((res, cur) => res.replace(new RegExp(cur + '=', 'g'), ''), text);
-
+function cleanFromXSS(data) {
     Object.keys(data).forEach(field => {
         data[field] = xssFilters.inHTMLData(data[field]);
+        data[field] = xssFilters.inDoubleQuotedAttr(data[field]);
+    });
+    return data;
+}
+
+function customCleanFromXSS(data) {
+    const escapeSpecial = (text) =>
+        text.replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;')
+            .replace(/\//g, '&#x2F;');
+    const events = ["onclick", "onload", "onunload", "onabort", "onerror", "onblur", "onchange", "onfocus", "onreset", "onsubmit", "ondblclick", "onkeydown", "onkeypress", "onkeyup", "onmousedown", "onmouseup", "onmouseover", "onmouseout", "onselect", "javascript"];
+    const escapeEvents = (text) => events.reduce((res, cur) => res.replace(new RegExp(cur + '=', 'gi'), ''), text);
+    Object.keys(data).forEach(field => {
+        data[field] = escapeSpecial(data[field]);
         data[field] = escapeEvents(data[field]);
     });
     return data;

@@ -57,3 +57,8 @@ function sendCSRF(form) {
         })
         .catch((err) => console.error(err));
 }
+
+function showIframe() {
+    document.getElementsByClassName('clickjacking-frame')[0]
+        .classList.toggle('clickjacking-frame-none');
+}
