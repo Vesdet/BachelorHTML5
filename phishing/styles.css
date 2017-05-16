@@ -7,11 +7,11 @@ label {
 }
 
 .clickjacking {
-    height: 600px;
+    height: 440px;
 }
 
 .clickjacking-fake {
-    margin: 14px 27px;
+    margin: 32px 23px;
 }
 
 .clickjacking-frame {
@@ -19,7 +19,7 @@ label {
     opacity: 0.4;
     border: 0;
     width: 800px;
-    height: 520px;
+    height: 440px;
 }
 
 .clickjacking-frame-none {

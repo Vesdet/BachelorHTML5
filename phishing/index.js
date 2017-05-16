@@ -38,6 +38,11 @@ function stealCookie() {
         .catch((err) => console.error(err));
 }
 
+function clearCookie() {
+    document.cookie = 'CSRF-TOKEN=';
+    document.getElementsByClassName('stealing-cookies')[0].value = document.cookie;
+}
+
 function sendCSRF(form) {
     let myHeaders = new Headers();
     myHeaders.append("X-CSRF-TOKEN", form.csrfToken.value);

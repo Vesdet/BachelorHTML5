@@ -7,9 +7,19 @@
     </head>
     <body>
 
-    <div id="iframe-click-protector">
-        <button onclick="protectorClick()" >GO to SITE</button>
-    </div>
+    <!--Clockjacking Protector-->
+    <!--<div id="iframe-click-protector">-->
+        <!--<button onclick="protectorClick()" >GO to SITE</button>-->
+    <!--</div>-->
+
+    <label>
+        Protected website:
+        <select id="isProtected" onchange="isProtected(this.value)">
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+        </select>
+    </label>
+
     <fieldset>
         <legend>Click field</legend>
         <button onclick="clickJack()">LIKE!!</button>
@@ -25,12 +35,6 @@
             <input type="submit" value="Sing in (Send XSS data)">
         </form>
 
-        <form id="xss-blocked-form" onsubmit="sendBlockedXSS(this); return false;">
-            <label>Login:<input name="login" type="text"/></label><br/>
-            <label>Password:<input name="password" type="text"/></label><br/>
-            <input type="submit" value="Sing in (Send blocked XSS data)">
-        </form>
-
         <div>
             List of XSS vectors before HTML5
             <pre><code>&lt;a href=javascript:alert(1)&gt;click&lt;a/&gt;
@@ -43,6 +47,7 @@ inputtext" autofocus onfocus="alert(1)  // input, select, keygen ...
         </div>
     </fieldset>
 
+    <!--Phishing site-->
     <div>
         <a href="http://127.0.0.1:1337/">You won 1000000$</a>
     </div>

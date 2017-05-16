@@ -1,21 +1,12 @@
-function sendXSS(form) {
-    fetch('/xssLogin', {
-        method: 'post',
-        body: JSON.stringify({
-            login: form.login.value,
-            password: form.password.value
-        })
-    })
+function isProtected(value) {
+    fetch(`/isProtected?val=${value}`)
         .then((res) => res.text())
-        .then((data) => {
-            console.log("serverData:", data);
-            document.getElementsByClassName('user-info')[0].innerHTML = data;
-        })
+        .then((data) => console.info("Protected: " + data))
         .catch((err) => console.error(err));
 }
 
-function sendBlockedXSS(form) {
-    fetch('/xssBlockedLogin', {
+function sendXSS(form) {
+    fetch('/xssLogin', {
         method: 'post',
         body: JSON.stringify({
             login: form.login.value,

@@ -3,6 +3,7 @@ let url = require('url');
 let fs = require('fs');
 let xssFilters = require('xss-filters');
 
+let isProtected = true;
 let server = new http.Server(accept);
 
 const cookie = 'CSRF-TOKEN=TokenMD5withSalt';
@@ -10,6 +11,9 @@ const data = {
     bachelor: true,
     name: 'Nikita',
     year: 2017
+};
+const notConfidData = {
+    data: "Not confidential data"
 };
 const allowDomains = ['http://google.com', 'http://127.0.0.1:1337']; // Resolved domains for requests
 
@@ -22,46 +26,48 @@ function accept(req, res) {
     let originDomain = req.headers.origin;
 
     switch (urlParced.pathname) {
+        case '/isProtected':
+            isProtected = urlParced.query['val'] === 'true';
+            res.end(global.isProtected);
+            break;
+
         case '/xssLogin':
             userData = "";
             req.on('data', chunk => userData += chunk); // Read req data
             req.on('end', () => {
                 userData = JSON.parse(userData);
+                if (isProtected)
+                    userData = customCleanFromXSS(userData);
+                console.log(userData);
                 res.writeHead(200, {'Content-Type': 'text/html; charset=utf8'});
                 res.end(`Hello, ${userData.login}<br/>Your password: <input value="${userData.password}"/>`)
             });
             break;
-        case '/xssBlockedLogin':
-            userData = "";
-            req.on('data', chunk => userData += chunk); // Read req data
-            req.on('end', () => {
-                userData = JSON.parse(userData);
-                userData = customCleanFromXSS(userData);
-                res.writeHead(200, {'Content-Type': 'text/html; charset=utf8'});
-                res.end(`Hello, ${userData.login}<br/>Your password: <input value="${userData.password}"/>`)
-            });
-            break;
-            
+
         case '/cors':
+            // Without 'Access-Control-Allow-Origin' - CORS not works
+            // 'Access-Control-Allow-Origin' header
+            let allowDomain = null;
+            if (isProtected) allowDomain = allowDomains.includes(originDomain)
+                ? originDomain : 'http://127.0.0.1:1327'; // RIGHT
+            else allowDomain = '*'; // BAD
             res.writeHead(200, {
                 'Content-Type': 'application/json',
                 'Cache-Control': 'no-cache',
 
-                // Without 'Access-Control-Allow-Origin' - CORS not works
-                // 'Access-Control-Allow-Origin': '*',   // BAD
-                'Access-Control-Allow-Origin': allowDomains.includes(originDomain) ? originDomain : null,  // RIGHT
-
+                'Access-Control-Allow-Origin': allowDomain,  // RIGHT
                 'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type', // Resolved headers
-                'Access-Control-Allow-Methods': 'GET, POST' // Permission only GET and POST methods
+                'Access-Control-Allow-Methods': isProtected ? 'GET, POST' : 'GET, POST, DELETE, OPTIONS' // Permission only GET and POST methods
             });
-            res.end(JSON.stringify(data));
+            res.end(JSON.stringify(isProtected ? notConfidData : data));
             break;
 
         case '/csrf/getCookie':
             console.info("request for cookie");
             res.writeHead(200, {
-                'Access-Control-Allow-Origin': allowDomains.includes(originDomain) ? originDomain : null,
-                'Access-Control-Allow-Credentials': true,
+                'Access-Control-Allow-Origin': allowDomains.includes(originDomain)
+                    ? originDomain : 'http://127.0.0.1:1327', // RIGHT
+                'Access-Control-Allow-Credentials': !isProtected,
                 'Set-Cookie': cookie + '; path=/;'
             });
             res.end('You are get Cookie');
@@ -94,9 +100,9 @@ function accept(req, res) {
         default:
             res.writeHead(200, {
                 'Access-Control-Allow-Origin': '*',
-                'X-Frame-Options': 'DENY', // Protection from Clickjacking
-                // 'X-Frame-Options': 'SAMEORIGIN',
-                // 'X-Frame-Options': 'ALLOW-FROM http://127.0.0.1:1337/'
+                'X-Frame-Options': isProtected ? 'SAMEORIGIN' : null, // Protection from Clickjacking
+                // 'X-Frame-Options': 'DENY',
+                // 'X-Frame-Options': 'ALLOW-FROM <origin>'
             });
             res.end(getStatic(req.url));
     }
@@ -108,11 +114,11 @@ let siteCss = fs.readFileSync('./website/site.css');
 let siteIco = fs.readFileSync('./favicon.ico');
 const getStatic = (url) => {
     return {
-        '/': siteHtml,
-        '/site.js': siteJS,
-        '/site.css': siteCss,
-        '/favicon.ico': siteIco
-    }[url] || null;
+            '/': siteHtml,
+            '/site.js': siteJS,
+            '/site.css': siteCss,
+            '/favicon.ico': siteIco
+        }[url] || null;
 };
 
 function cleanFromXSS(data) {
