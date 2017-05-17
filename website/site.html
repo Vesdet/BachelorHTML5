@@ -7,7 +7,7 @@
     </head>
     <body>
 
-    <!--Clockjacking Protector-->
+    <!--Clickjacking Protector-->
     <!--<div id="iframe-click-protector">-->
         <!--<button onclick="protectorClick()" >GO to SITE</button>-->
     <!--</div>-->
@@ -29,7 +29,7 @@
         <legend>XSS</legend>
         <div class="user-info"></div>
 
-        <form id="xss-form" onsubmit="sendXSS(this); return false;">
+        <form class="xss-form" id="xss-form" onsubmit="sendXSS(this); return false;">
             <label>Login:<input name="login" type="text"/></label><br/>
             <label>Password:<input name="password" type="text"/></label><br/>
             <input type="submit" value="Sing in (Send XSS data)">
@@ -48,9 +48,7 @@ inputtext" autofocus onfocus="alert(1)  // input, select, keygen ...
     </fieldset>
 
     <!--Phishing site-->
-    <div>
-        <a href="http://127.0.0.1:1337/">You won 1000000$</a>
-    </div>
+    <button class="phishing-page" onclick="location.href='http://127.0.0.1:1337/';" >You won 1000000$</button>
 
     </body>
 </html>

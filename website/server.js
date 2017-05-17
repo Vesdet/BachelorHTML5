@@ -28,7 +28,7 @@ function accept(req, res) {
     switch (urlParced.pathname) {
         case '/isProtected':
             isProtected = urlParced.query['val'] === 'true';
-            res.end(global.isProtected);
+            res.end('' + isProtected);
             break;
 
         case '/xssLogin':
@@ -40,7 +40,7 @@ function accept(req, res) {
                     userData = customCleanFromXSS(userData);
                 console.log(userData);
                 res.writeHead(200, {'Content-Type': 'text/html; charset=utf8'});
-                res.end(`Hello, ${userData.login}<br/>Your password: <input value="${userData.password}"/>`)
+                res.end(`Hello, ${userData.login}<br/>Your password: <input type="text" value="${userData.password}"/>`)
             });
             break;
 

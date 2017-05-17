@@ -1,13 +1,46 @@
 fieldset {
     position: relative;
 }
+
+input, select, button {
+    margin: 3px;
+    padding: 3px 8px;
+}
+
+input[type=submit], button {
+    background-color: #eee;
+    outline: 0;
+    border: 1px solid #bbb;
+}
+input[type=submit]:hover, button:hover {
+    background-color: #ddd;
+}
+input[type=submit]:active, button:active {
+    background-color: #b2b2f0;
+    box-shadow: 0 0 3px #6666e1;
+}
+
+input[type=text], input[type=number], select {
+    outline-color: #6666e1;
+}
+
+.xss-form {
+    width: 275px;
+    text-align: right;
+}
+
 .user-info {
-    padding: 5px;
-    border: 1px solid black;
+    left: 350px;
     position: absolute;
-    right: 20px;
+    padding: 5px;
+    border: 1px solid #bbb;
+    width: 325px;
+    height: 58px;
+    line-height: 1.5em;
     font-size: 18px;
-    margin-bottom: 20px;
+}
+.user-info:hover {
+    box-shadow: 0 0 3px #6666e1;
 }
 
 #iframe-click-protector {
@@ -25,5 +58,11 @@ fieldset {
     border-radius: 5px;
     color: white;
     font-size: 20px;
-    background-color: darkblue;
+    background-color: #6666e1;
+}
+
+.phishing-page {
+    padding: 5px;
+    text-align: center;
+    border: 1px solid #6666e1;
 }
