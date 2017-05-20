@@ -19,23 +19,25 @@
             </select>
         </label>
         <label>Headers:
-            <input id="cors-header-title" placeholder="Header Title"/>:
-            <input id="cors-header-value" placeholder="Header Value"/><br/>
-            Example: <code>"Content-Type": "application/xml"</code>
+            <input type="text" id="cors-header-title" placeholder="Header Title"/>:
+            <input type="text" id="cors-header-value" placeholder="Header Value"/>
         </label>
-        <textarea class="corsText" cols="100" rows="5"
-                  placeholder="Server data"></textarea><br />
+        <label>Example:
+            <code>"Content-Type": "application/xml"</code>
+        </label>
+
+        <textarea class="corsText" cols="65" rows="5"
+                  placeholder="Server data"></textarea>
         <button onclick="sendCORS()">Send CORS request</button>
     </fieldset>
 
     <fieldset>
         <legend>CSRF</legend>
-        <code>&lt;form id="csrf-form" onsubmit="sendCSRF(this); return false;"&gt;</code>
         <form id="csrf-form" onsubmit="sendCSRF(this); return false;">
-            <label>Name: <input name="name" value="Nikita"/></label>
-            <label>Year: <input name="year" value="2017"/></label>
-            <label>CSRF-token: <input name="csrfToken" value="1327"/></label>
-            <textarea rows="5" id="csrfText" placeholder="Server data"></textarea><br />
+            <label>Name: <input type="text" name="name" value="Nikita"/></label>
+            <label>Year: <input type="text" name="year" value="2017"/></label>
+            <label>CSRF-token: <input type="text" name="csrfToken" value="1327"/></label>
+            <textarea cols="65" rows="5" id="csrfText" placeholder="Server data"></textarea>
             <input type="submit" value="Send CORS with credantionals">
         </form>
         <hr>

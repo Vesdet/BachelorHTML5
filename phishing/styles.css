@@ -1,17 +1,56 @@
-label {
+fieldset {
+    width: 800px;
+}
+
+input, select, button, textarea {
+    margin: 3px;
+    padding: 3px 8px;
+}
+
+input[type=submit], button {
+    background-color: #eee;
+    outline: 0;
+    border: 1px solid #bbb;
+}
+input[type=submit]:hover, button:hover {
+    background-color: #ddd;
+}
+input[type=submit]:active, button:active {
+    background-color: #b2b2f0;
+    box-shadow: 0 0 3px #6666e1;
+}
+
+input[type=text], input[type=number], select, textarea {
+    outline-color: #6666e1;
+}
+
+label, textarea {
     display: block;
 }
 
+form label {
+    width: 280px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
 .stealing-cookies {
-    width: 300px;
+    background-color: #efeffc;
+    width: 280px;
 }
 
 .clickjacking {
-    height: 440px;
+    height: 510px;
 }
 
 .clickjacking-fake {
-    margin: 32px 23px;
+    margin: 45px 0;
+}
+.clickjacking-fake button {
+    border: 2px solid darkblue;
+    background-color: #b2b2f0;
+    box-shadow: 0 0 5px #6666e1;
 }
 
 .clickjacking-frame {
@@ -19,7 +58,7 @@ label {
     opacity: 0.4;
     border: 0;
     width: 800px;
-    height: 440px;
+    height: 470px;
 }
 
 .clickjacking-frame-none {

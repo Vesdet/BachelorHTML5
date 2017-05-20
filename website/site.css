@@ -1,5 +1,6 @@
 fieldset {
     position: relative;
+    max-width: 800px;
 }
 
 input, select, button {
@@ -54,15 +55,16 @@ input[type=text], input[type=number], select {
 #iframe-click-protector button {
     position: absolute;
     right: 20px;
-    border: 2px solid black;
-    border-radius: 5px;
     color: white;
     font-size: 20px;
-    background-color: #6666e1;
+    background-color: darkblue;
 }
 
 .phishing-page {
-    padding: 5px;
+    padding: 7px;
     text-align: center;
-    border: 1px solid #6666e1;
+    border: 2px solid darkblue;
+    background-color: #b2b2f0;
+    box-shadow: 0 0 5px #6666e1;
+    text-transform: uppercase;
 }
